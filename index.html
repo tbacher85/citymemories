@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupertino Chronicles - Anniversary Celebration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        /* Header and Hero Section */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .about-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Stories Grid */
+        .stories-section {
+            padding: 60px 0;
+            background-color: #f1f1f1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .story-card-img {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .story-card-content {
+            padding: 20px;
+        }
+
+        .story-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .story-card p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .story-card .author {
+            font-style: italic;
+            color: #7f8c8d;
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        #story-map {
+            height: 500px;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .map-container {
+            position: relative;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Custom marker clusters */
+        .marker-cluster-small {
+            background-color: rgba(181, 226, 140, 0.6);
+        }
+        .marker-cluster-small div {
+            background-color: rgba(110, 204, 57, 0.6);
+        }
+
+        .marker-cluster-medium {
+            background-color: rgba(241, 211, 87, 0.6);
+        }
+        .marker-cluster-medium div {
+            background-color: rgba(240, 194, 12, 0.6);
+        }
+
+        .marker-cluster-large {
+            background-color: rgba(253, 156, 115, 0.6);
+        }
+        .marker-cluster-large div {
+            background-color: rgba(241, 128, 23, 0.6);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Story Form */
+        .story-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .story-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .story-form input[type="text"],
+        .story-form input[type="email"],
+        .story-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .story-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            margin-bottom: 20px;
+        }
+
+        .file-upload-preview {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .file-upload-preview img {
+            max-height: 150px;
+            border-radius: 4px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            padding: 40px 0;
+        }
+
+        .admin-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-nav a {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            color: #7f8c8d;
+            border-bottom: 3px solid transparent;
+        }
+
+        .admin-nav a.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stories-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .stories-table th, .stories-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .stories-table th {
+            background-color: #f2f2f2;
+            font-weight: 500;
+        }
+
+        .stories-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 3px;
+        }
+
+        /* Story Detail Modal */
+        .story-detail-img {
+            height: 300px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            color: #7f8c8d;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .admin-login {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .admin-nav a {
+                margin: 5px 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            #story-map {
+                height: 400px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Public View -->
+    <div id="public-view">
+        <header>
+            <div class="hero-content">
+                <h1>Cupertino Chronicles: Celebrating 70 Years of Community & Stories!</h1>
+                <p>Share your memories and be part of Cupertino's rich history</p>
+                <button id="share-story-btn" class="btn">Share Your Story</button>
+            </div>
+        </header>
+
+        <section class="about-section">
+            <div class="container">
+                <h2>About The Project</h2>
+                <div class="about-content">
+                    <p>As Cupertino celebrates its 70th anniversary, we're collecting stories from residents past and present to create a living history of our community. From the orchards of the past to the tech hub of today, every story helps paint a picture of what makes Cupertino special.</p>
+                    <p>Share your personal memories, historical moments, or everyday experiences that capture the spirit of our city. All stories will be reviewed by our team before publication to ensure they meet community guidelines.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stories-section">
+            <div class="container">
+                <h2 class="section-title">Featured Stories</h2>
+                <div id="stories-grid" class="stories-grid">
+                    <!-- Stories will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section class="map-section">
+            <div class="container">
+                <h2 class="section-title">Stories Map</h2>
+                <p class="text-center mb-20">Explore Cupertino through the locations of our community's stories</p>
+                <div class="map-container">
+                    <div id="story-map"></div>
+                    <div class="map-overlay">
+                        <button id="locate-cupertino" class="btn btn-secondary" style="padding: 8px 12px;">Center Map</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <p>Cupertino Chronicles &copy; 2025 | A project celebrating Cupertino's 70th anniversary</p>
+                <p class="mt-20"><small>This is a demonstration prototype only. No actual data is being permanently stored.</small></p>
+            </div>
+        </footer>
+
+        <div class="admin-login">
+            <button id="admin-login-btn" class="btn btn-secondary">Admin Login</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel (hidden by default) -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="container">
+            <h2 class="text-center">Cupertino Chronicles Admin Panel</h2>
+            <p class="text-center mb-20">4 Eyes Validation System</p>
+
+            <div class="admin-nav">
+                <a href="#" class="active" data-section="pending">Review Pending Stories</a>
+                <a href="#" data-section="published">Manage Published Stories</a>
+                <a href="#" id="return-to-public">Return to Public View</a>
+            </div>
+
+            <div id="pending-stories-section" class="admin-section active">
+                <h3>Pending Review</h3>
+                <table class="stories-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Date Submitted</th>
+                            <th>Preview</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-stories-list">
+                        <!-- Pending stories will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="published-stories-section" class="admin-section">
+                <h3>Published Stories</h3>
+                <table class="stories-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Date Published</th>
+                            <th>Preview</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="published-stories-list">
+                        <!-- Published stories will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Submission Modal -->
+    <div id="story-submission-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Share Your Cupertino Story</h2>
+            <form id="story-form" class="story-form">
+                <div class="form-group">
+                    <label for="story-title">Story Title*</label>
+                    <input type="text" id="story-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="story-content">Your Story*</label>
+                    <textarea id="story-content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="author-name">Your Name (Optional)</label>
+                    <input type="text" id="author-name">
+                </div>
+                <div class="form-group">
+                    <label for="author-email">Email (Optional - for admin use only)</label>
+                    <input type="email" id="author-email">
+                </div>
+                <div class="form-group">
+                    <label for="story-date">Approximate Date/Year*</label>
+                    <input type="text" id="story-date" required placeholder="e.g., 1980s or 1995">
+                </div>
+                <div class="form-group">
+                    <label for="story-location">Location in Cupertino (Optional)</label>
+                    <input type="text" id="story-location" placeholder="e.g., Memorial Park or De Anza Blvd">
+                </div>
+                <div class="form-group file-upload">
+                    <label>Upload Photo (Optional)</label>
+                    <input type="file" id="story-image" accept="image/*">
+                    <div class="file-upload-preview" id="image-preview">
+                        <img id="preview-image" src="#" alt="Preview">
+                    </div>
+                </div>
+                <button type="submit" class="btn">Submit Story</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Story Detail Modal -->
+    <div id="story-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="story-detail-content">
+                <!-- Story details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Edit Story Modal -->
+    <div id="admin-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Story</h2>
+            <form id="admin-edit-form" class="story-form">
+                <input type="hidden" id="edit-story-id">
+                <div class="form-group">
+                    <label for="edit-story-title">Story Title*</label>
+                    <input type="text" id="edit-story-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-story-content">Story Content*</label>
+                    <textarea id="edit-story-content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-name">Author Name</label>
+                    <input type="text" id="edit-author-name">
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-email">Author Email</label>
+                    <input type="email" id="edit-author-email">
+                </div>
+                <div class="form-group">
+                    <label for="edit-story-date">Date/Year*</label>
+                    <input type="text" id="edit-story-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-story-location">Location</label>
+                    <input type="text" id="edit-story-location">
+                </div>
+                <div class="form-group">
+                    <label for="edit-story-status">Status</label>
+                    <select id="edit-story-status">
+                        <option value="pending">Pending</option>
+                        <option value="published">Published</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal">&times;</span>
+            <h2 id="confirmation-title">Confirm Action</h2>
+            <p id="confirmation-message">Are you sure you want to perform this action?</p>
+            <div class="action-buttons" style="justify-content: center; margin-top: 30px;">
+                <button id="confirm-action" class="btn btn-danger">Confirm</button>
+                <button id="cancel-action" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submission Success Modal -->
+    <div id="submission-success-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px; text-align: center;">
+            <span class="close-modal">&times;</span>
+            <h2>Thank You!</h2>
+            <p>Your story has been submitted for review. Our team will evaluate it and you'll be notified if it's approved for publication.</p>
+            <button id="close-success-modal" class="btn" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <!-- Marker clustering plugin -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <script>
+        // Demo Data - Initial stories
+        let stories = [
+            {
+                id: '1',
+                title: 'My First Day in Cupertino - 1975',
+                content: 'I remember arriving in Cupertino in the summer of 1975. The orchards stretched as far as the eye could see, and the smell of apricots was everywhere. My family had just moved from the East Coast, and everything felt so different. The small downtown area had just a few shops, and everyone seemed to know each other. I started school at Cupertino Middle School that fall, where I made lifelong friends. Even as the city has grown and changed, those early memories of a small, close-knit community stay with me.',
+                author: 'Susan Thompson',
+                email: 'susan@example.com',
+                date: '1975',
+                location: 'Near Cupertino Middle School',
+                imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                status: 'published',
+                timestamp: 1625097600000
+            },
+            {
+                id: '2',
+                title: 'The Old Cupertino Library Memories',
+                content: 'The old Cupertino Library on Torre Avenue was my second home growing up in the 1980s. I would ride my bike there every Saturday morning and spend hours browsing the shelves. The librarians knew me by name and would recommend new books they thought I might like. When the new library opened, I was excited about the modern facilities but also sad to see the old one go. That small building held so many memories of discovering new worlds through books and meeting friends for study sessions. The wooden tables with carved initials, the smell of old books, and the quiet hum of the ceiling fans are all vivid in my memory.',
+                author: 'Michael Chen',
+                email: 'michael@example.com',
+                date: '1980s',
+                location: 'Torre Avenue',
+                imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                status: 'published',
+                timestamp: 1625184000000
+            },
+            {
+                id: '3',
+                title: 'Apple Campus Through the Years',
+                content: 'I\'ve worked near the Apple campus since the late 1990s and have watched it transform over the decades. In the early days, it was just a few nondescript buildings. I remember when the first glass-fronted buildings went up, and we all marveled at the design. The construction of the spaceship campus was an event we all followed closely - the cranes, the gradual taking shape of the ring. But what hasn\'t changed is the energy of the place. Even as Apple grew from a struggling company to a tech giant, that sense of innovation and possibility has remained constant. The campus may look different, but the spirit feels the same.',
+                author: 'Raj Patel',
+                email: 'raj@example.com',
+                date: '1990s-2020s',
+                location: 'Apple Campus',
+                imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                status: 'published',
+                timestamp: 1625270400000
+            },
+            {
+                id: '4',
+                title: 'A Childhood on De Anza Blvd',
+                content: 'I grew up in a house on De Anza Blvd in the 1960s, when it was still a quiet residential street. Our backyard bordered an apricot orchard, and in the summer, the farmer would let us kids pick fruit in exchange for helping with the harvest. We would ride our bikes up and down the street without a care, playing hide and seek in the orchards after school. The construction of the shopping center in the early 70s was a big event - we couldn\'t believe we were getting our own "mall"! Now when I drive down De Anza, I can barely recognize the street of my childhood, but the memories remain vivid.',
+                author: 'Linda Garcia',
+                email: 'linda@example.com',
+                date: '1960s',
+                location: 'De Anza Blvd',
+                imageUrl: '',
+                status: 'pending',
+                timestamp: 1625356800000
+            },
+            {
+                id: '5',
+                title: 'Local Park Renovation Story',
+                content: 'When Memorial Park was renovated in 2012, I was skeptical about the changes. The old playground had been there since my own childhood, and my kids had played on those same swings and slides. But watching the community come together to plan the new park changed my mind. The city held meetings where residents could give input, and they really listened. The result is a space that honors the park\'s history while meeting modern needs. The dedication ceremony, where they incorporated pieces of the old playground into a memorial wall, was particularly moving. It showed how Cupertino values both progress and preservation.',
+                author: 'David Kim',
+                email: 'david@example.com',
+                date: '2012',
+                location: 'Memorial Park',
+                imageUrl: '',
+                status: 'pending',
+                timestamp: 1625443200000
+            }
+        ];
+
+        // DOM Elements
+        const publicView = document.getElementById('public-view');
+        const adminPanel = document.getElementById('admin-panel');
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const returnToPublicBtn = document.getElementById('return-to-public');
+        const shareStoryBtn = document.getElementById('share-story-btn');
+        const storiesGrid = document.getElementById('stories-grid');
+        const pendingStoriesList = document.getElementById('pending-stories-list');
+        const publishedStoriesList = document.getElementById('published-stories-list');
+        const storyForm = document.getElementById('story-form');
+        const adminEditForm = document.getElementById('admin-edit-form');
+        const adminNavLinks = document.querySelectorAll('.admin-nav a');
+        const adminSections = document.querySelectorAll('.admin-section');
+
+        // Modals
+        const storySubmissionModal = document.getElementById('story-submission-modal');
+        const storyDetailModal = document.getElementById('story-detail-modal');
+        const adminEditModal = document.getElementById('admin-edit-modal');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const submissionSuccessModal = document.getElementById('submission-success-modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const closeSuccessModalBtn = document.getElementById('close-success-modal');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const confirmActionBtn = document.getElementById('confirm-action');
+        const cancelActionBtn = document.getElementById('cancel-action');
+
+        // Form elements
+        const imageUpload = document.getElementById('story-image');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImage = document.getElementById('preview-image');
+
+        // Map elements
+        const locateCupertinoBtn = document.getElementById('locate-cupertino');
+
+        // Map variables
+        let storyMap;
+        let markerClusterGroup;
+        const cupertinoCoords = [37.322998, -122.032181]; // Approximate center of Cupertino
+
+        // State variables
+        let currentAction = null;
+        let currentStoryId = null;
+
+        // Initialize the app
+        function init() {
+            // Load stories from localStorage if available
+            const savedStories = localStorage.getItem('cupertinoChroniclesStories');
+            if (savedStories) {
+                stories = JSON.parse(savedStories);
+            } else {
+                // Save initial stories to localStorage
+                saveStories();
+            }
+
+            // Initialize the map
+            initMap();
+
+            // Render public view
+            renderStories();
+            renderMapMarkers();
+
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Admin login
+            adminLoginBtn.addEventListener('click', showAdminPanel);
+            returnToPublicBtn.addEventListener('click', showPublicView);
+
+            // Story submission
+            shareStoryBtn.addEventListener('click', () => {
+                openModal(storySubmissionModal);
+            });
+
+            // Form submission
+            storyForm.addEventListener('submit', submitStory);
+            adminEditForm.addEventListener('submit', saveEditedStory);
+
+            // Image upload preview
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Close modals
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                });
+            });
+
+            closeSuccessModalBtn.addEventListener('click', () => {
+                closeModal(submissionSuccessModal);
+            });
+
+            cancelEditBtn.addEventListener('click', () => {
+                closeModal(adminEditModal);
+            });
+
+            // Admin navigation
+            adminNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.dataset.section;
+                    if (section) {
+                        showAdminSection(section);
+                    }
+                });
+            });
+
+            // Confirmation modal
+            confirmActionBtn.addEventListener('click', confirmAction);
+            cancelActionBtn.addEventListener('click', () => {
+                closeModal(confirmationModal);
+            });
+
+            // Close modal when clicking outside content
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    closeAllModals();
+                }
+            });
+        }
+
+        // Initialize the map
+        function initMap() {
+            storyMap = L.map('story-map').setView(cupertinoCoords, 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(storyMap);
+            
+            // Initialize marker cluster group
+            markerClusterGroup = L.markerClusterGroup();
+            storyMap.addLayer(markerClusterGroup);
+            
+            // Add locate button event
+            locateCupertinoBtn.addEventListener('click', () => {
+                storyMap.setView(cupertinoCoords, 13);
+            });
+        }
+
+        // Render markers on the map
+        function renderMapMarkers() {
+            // Clear existing markers
+            markerClusterGroup.clearLayers();
+            
+            // Add markers for published stories with locations
+            const publishedStories = stories.filter(story => 
+                story.status === 'published' && story.location
+            );
+            
+            // Known locations for demo purposes
+            const demoLocations = {
+                'Near Cupertino Middle School': [37.3226, -122.0286],
+                'Torre Avenue': [37.3235, -122.0418],
+                'Apple Campus': [37.3318, -122.0312],
+                'De Anza Blvd': [37.3189, -122.0425],
+                'Memorial Park': [37.3243, -122.0385]
+            };
+            
+            publishedStories.forEach(story => {
+                // Try to get coordinates for the location
+                let coords = demoLocations[story.location] || null;
+                
+                if (!coords) {
+                    // If no exact coordinates, use approximate Cupertino location with slight random offset
+                    coords = [
+                        cupertinoCoords[0] + (Math.random() * 0.02 - 0.01),
+                        cupertinoCoords[1] + (Math.random() * 0.02 - 0.01)
+                    ];
+                }
+                
+                const marker = L.marker(coords);
+                
+                // Create popup content
+                let popupContent = `<h3>${story.title}</h3>`;
+                if (story.author) popupContent += `<p><em>By ${story.author}</em></p>`;
+                if (story.date) popupContent += `<p>${story.date}</p>`;
+                popupContent += `<p>${story.content.substring(0, 100)}...</p>`;
+                popupContent += `<button class="btn" onclick="showStoryDetail('${story.id}')">Read Full Story</button>`;
+                
+                marker.bindPopup(popupContent, { maxWidth: 300 });
+                markerClusterGroup.addLayer(marker);
+            });
+        }
+
+        // Render stories in public view
+        function renderStories() {
+            storiesGrid.innerHTML = '';
+            
+            const publishedStories = stories.filter(story => story.status === 'published');
+            publishedStories.sort((a, b) => b.timestamp - a.timestamp);
+            
+            publishedStories.forEach(story => {
+                const storyCard = createStoryCard(story);
+                storiesGrid.appendChild(storyCard);
+            });
+        }
+
+        // Create a story card element
+        function createStoryCard(story) {
+            const card = document.createElement('div');
+            card.className = 'story-card';
+            card.dataset.id = story.id;
+            
+            let imageUrl = story.imageUrl || 'https://via.placeholder.com/300x200?text=Cupertino+Story';
+            
+            card.innerHTML = `
+                <div class="story-card-img" style="background-image: url('${imageUrl}')"></div>
+                <div class="story-card-content">
+                    <h3>${story.title}</h3>
+                    <p>${story.content.substring(0, 100)}...</p>
+                    ${story.author ? `<p class="author">— ${story.author}</p>` : ''}
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                showStoryDetail(story.id);
+            });
+            
+            return card;
+        }
+
+        // Show story detail in modal
+        function showStoryDetail(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (!story) return;
+            
+            const detailContent = document.getElementById('story-detail-content');
+            let imageUrl = story.imageUrl || 'https://via.placeholder.com/800x400?text=Cupertino+Story';
+            
+            detailContent.innerHTML = `
+                <div class="story-detail-img" style="background-image: url('${imageUrl}')"></div>
+                <h2>${story.title}</h2>
+                <div class="story-meta">
+                    ${story.author ? `<span>By ${story.author}</span>` : ''}
+                    ${story.date ? `<span>${story.date}</span>` : ''}
+                    ${story.location ? `<span>${story.location}</span>` : ''}
+                </div>
+                <p>${story.content}</p>
+            `;
+            
+            openModal(storyDetailModal);
+        }
+
+        // Submit new story
+        function submitStory(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('story-title').value;
+            const content = document.getElementById('story-content').value;
+            const author = document.getElementById('author-name').value;
+            const email = document.getElementById('author-email').value;
+            const date = document.getElementById('story-date').value;
+            const location = document.getElementById('story-location').value;
+            
+            const newStory = {
+                id: generateId(),
+                title,
+                content,
+                author,
+                email,
+                date,
+                location,
+                imageUrl: previewImage.src !== '#' ? previewImage.src : '',
+                status: 'pending',
+                timestamp: Date.now()
+            };
+            
+            stories.push(newStory);
+            saveStories();
+            
+            // Reset form
+            storyForm.reset();
+            imagePreview.style.display = 'none';
+            previewImage.src = '#';
+            
+            // Close submission modal and show success
+            closeModal(storySubmissionModal);
+            openModal(submissionSuccessModal);
+            
+            // If in admin view, refresh pending stories
+            if (adminPanel.style.display === 'block') {
+                renderPendingStories();
+            }
+        }
+
+        // Show admin panel
+        function showAdminPanel() {
+            // NOTE: In a real application, this would use secure authentication
+            // This is for demo purposes only
+            const password = prompt('Enter admin password:');
+            if (password === 'cupertino2025') {
+                publicView.style.display = 'none';
+                adminPanel.style.display = 'block';
+                renderPendingStories();
+                renderPublishedStories();
+            } else if (password !== null) {
+                alert('Incorrect password');
+            }
+        }
+
+        // Show public view
+        function showPublicView() {
+            publicView.style.display = 'block';
+            adminPanel.style.display = 'none';
+        }
+
+        // Show specific admin section
+        function showAdminSection(section) {
+            adminSections.forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            adminNavLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            document.getElementById(`${section}-stories-section`).classList.add('active');
+            document.querySelector(`.admin-nav a[data-section="${section}"]`).classList.add('active');
+            
+            if (section === 'pending') {
+                renderPendingStories();
+            } else if (section === 'published') {
+                renderPublishedStories();
+            }
+        }
+
+        // Render pending stories in admin view
+        function renderPendingStories() {
+            pendingStoriesList.innerHTML = '';
+            
+            const pendingStories = stories.filter(story => story.status === 'pending');
+            pendingStories.sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (pendingStories.length === 0) {
+                pendingStoriesList.innerHTML = '<tr><td colspan="5" style="text-align: center;">No pending stories to review</td></tr>';
+                return;
+            }
+            
+            pendingStories.forEach(story => {
+                const row = document.createElement('tr');
+                row.dataset.id = story.id;
+                
+                row.innerHTML = `
+                    <td>${story.title}</td>
+                    <td>${story.author || 'Anonymous'}</td>
+                    <td>${new Date(story.timestamp).toLocaleDateString()}</td>
+                    <td>${story.content.substring(0, 50)}...</td>
+                    <td class="action-buttons">
+                        <button class="btn action-btn view-pending-btn">View</button>
+                        <button class="btn action-btn btn-success approve-btn">Approve</button>
+                        <button class="btn action-btn edit-btn">Edit</button>
+                        <button class="btn action-btn btn-danger reject-btn">Reject</button>
+                    </td>
+                `;
+                
+                pendingStoriesList.appendChild(row);
+                
+                // Add event listeners to buttons
+                row.querySelector('.view-pending-btn').addEventListener('click', () => {
+                    showStoryDetail(story.id);
+                });
+                
+                row.querySelector('.approve-btn').addEventListener('click', () => {
+                    showConfirmation('approve', story.id, `Approve "${story.title}" for publication?`);
+                });
+                
+                row.querySelector('.edit-btn').addEventListener('click', () => {
+                    editStory(story.id);
+                });
+                
+                row.querySelector('.reject-btn').addEventListener('click', () => {
+                    showConfirmation('reject', story.id, `Reject "${story.title}"?`);
+                });
+            });
+        }
+
+        // Render published stories in admin view
+        function renderPublishedStories() {
+            publishedStoriesList.innerHTML = '';
+            
+            const publishedStories = stories.filter(story => story.status === 'published');
+            publishedStories.sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (publishedStories.length === 0) {
+                publishedStoriesList.innerHTML = '<tr><td colspan="5" style="text-align: center;">No published stories</td></tr>';
+                return;
+            }
+            
+            publishedStories.forEach(story => {
+                const row = document.createElement('tr');
+                row.dataset.id = story.id;
+                
+                row.innerHTML = `
+                    <td>${story.title}</td>
+                    <td>${story.author || 'Anonymous'}</td>
+                    <td>${new Date(story.timestamp).toLocaleDateString()}</td>
+                    <td>${story.content.substring(0, 50)}...</td>
+                    <td class="action-buttons">
+                        <button class="btn action-btn view-published-btn">View</button>
+                        <button class="btn action-btn edit-btn">Edit</button>
+                        <button class="btn action-btn btn-secondary unpublish-btn">Unpublish</button>
+                        <button class="btn action-btn btn-danger delete-btn">Delete</button>
+                    </td>
+                `;
+                
+                publishedStoriesList.appendChild(row);
+                
+                // Add event listeners to buttons
+                row.querySelector('.view-published-btn').addEventListener('click', () => {
+                    showStoryDetail(story.id);
+                });
+                
+                row.querySelector('.edit-btn').addEventListener('click', () => {
+                    editStory(story.id);
+                });
+                
+                row.querySelector('.unpublish-btn').addEventListener('click', () => {
+                    showConfirmation('unpublish', story.id, `Unpublish "${story.title}"?`);
+                });
+                
+                row.querySelector('.delete-btn').addEventListener('click', () => {
+                    showConfirmation('delete', story.id, `Permanently delete "${story.title}"?`);
+                });
+            });
+        }
+
+        // Edit story (admin)
+        function editStory(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (!story) return;
+            
+            document.getElementById('edit-story-id').value = story.id;
+            document.getElementById('edit-story-title').value = story.title;
+            document.getElementById('edit-story-content').value = story.content;
+            document.getElementById('edit-author-name').value = story.author || '';
+            document.getElementById('edit-author-email').value = story.email || '';
+            document.getElementById('edit-story-date').value = story.date || '';
+            document.getElementById('edit-story-location').value = story.location || '';
+            document.getElementById('edit-story-status').value = story.status;
+            
+            openModal(adminEditModal);
+        }
+
+        // Save edited story
+        function saveEditedStory(e) {
+            e.preventDefault();
+            
+            const storyId = document.getElementById('edit-story-id').value;
+            const story = stories.find(s => s.id === storyId);
+            if (!story) return;
+            
+            story.title = document.getElementById('edit-story-title').value;
+            story.content = document.getElementById('edit-story-content').value;
+            story.author = document.getElementById('edit-author-name').value;
+            story.email = document.getElementById('edit-author-email').value;
+            story.date = document.getElementById('edit-story-date').value;
+            story.location = document.getElementById('edit-story-location').value;
+            story.status = document.getElementById('edit-story-status').value;
+            
+            saveStories();
+            
+            // Refresh views
+            if (story.status === 'published') {
+                renderStories();
+                renderPublishedStories();
+                renderMapMarkers();
+            } else {
+                renderPendingStories();
+            }
+            
+            closeModal(adminEditModal);
+        }
+
+        // Show confirmation dialog
+        function showConfirmation(action, storyId, message) {
+            currentAction = action;
+            currentStoryId = storyId;
+            
+            document.getElementById('confirmation-title').textContent = `Confirm ${action}`;
+            document.getElementById('confirmation-message').textContent = message;
+            
+            openModal(confirmationModal);
+        }
+
+        // Handle confirmed action
+        function confirmAction() {
+            const story = stories.find(s => s.id === currentStoryId);
+            if (!story) return;
+            
+            switch (currentAction) {
+                case 'approve':
+                    story.status = 'published';
+                    story.timestamp = Date.now();
+                    break;
+                case 'reject':
+                    story.status = 'rejected';
+                    break;
+                case 'unpublish':
+                    story.status = 'pending';
+                    break;
+                case 'delete':
+                    stories = stories.filter(s => s.id !== currentStoryId);
+                    break;
+            }
+            
+            saveStories();
+            
+            // Refresh views
+            renderStories();
+            renderPendingStories();
+            renderPublishedStories();
+            renderMapMarkers();
+            
+            closeModal(confirmationModal);
+        }
+
+        // Save stories to localStorage
+        function saveStories() {
+            localStorage.setItem('cupertinoChroniclesStories', JSON.stringify(stories));
+        }
+
+        // Generate a unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Modal functions
+        function openModal(modal) {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                closeModal(modal);
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
